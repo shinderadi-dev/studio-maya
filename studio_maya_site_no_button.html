@@ -1,0 +1,562 @@
+
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Studio Maya</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+font-family:'Heebo',sans-serif;
+background:#f7f3ee;
+color:#2f2925;
+}
+
+.container{
+width:92%;
+max-width:1200px;
+margin:auto;
+}
+
+.topbar{
+position:fixed;
+top:0;
+width:100%;
+background:white;
+height:90px;
+display:flex;
+align-items:center;
+z-index:100;
+box-shadow:0 2px 12px rgba(0,0,0,0.05);
+}
+
+.nav{
+display:grid;
+grid-template-columns:auto 1fr auto;
+align-items:center;
+width:100%;
+}
+
+.logo{
+justify-self:end;
+display:flex;
+align-items:center;
+}
+
+.logo img{
+height:70px;
+width:auto;
+display:block;
+max-width:min(42vw, 260px);
+}
+
+.nav-links{
+display:flex;
+justify-content:center;
+gap:40px;
+font-size:18px;
+}
+
+.nav-links a{
+text-decoration:none;
+color:#333;
+font-weight:500;
+transition:.25s;
+}
+
+.nav-links a:hover{
+color:#b69472;
+}
+
+.menu-toggle{
+display:none;
+align-items:center;
+justify-content:center;
+width:46px;
+height:46px;
+border:1px solid rgba(47,41,37,.12);
+border-radius:12px;
+background:#fff;
+cursor:pointer;
+padding:0;
+}
+
+.menu-toggle span,
+.menu-toggle::before,
+.menu-toggle::after{
+content:"";
+display:block;
+width:22px;
+height:2px;
+background:#2f2925;
+border-radius:999px;
+transition:.25s ease;
+position:relative;
+}
+
+.menu-toggle span{margin:6px 0}
+.menu-toggle.is-open span{opacity:0}
+.menu-toggle.is-open::before{transform:translateY(8px) rotate(45deg)}
+.menu-toggle.is-open::after{transform:translateY(-8px) rotate(-45deg)}
+
+.mobile-panel{
+display:none;
+}
+
+.hero{
+height:100vh;
+position:relative;
+overflow:hidden;
+margin-top:90px;
+}
+
+.slide{
+position:absolute;
+width:100%;
+height:100%;
+object-fit:cover;
+opacity:0;
+transition:opacity .8s ease;
+}
+
+.slide.active{
+opacity:1;
+}
+
+.hero-overlay{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+text-align:center;
+color:white;
+}
+
+.hero-overlay h1{
+font-size:64px;
+font-weight:800;
+margin-bottom:20px;
+text-shadow:0 4px 20px rgba(0,0,0,0.3);
+}
+
+.hero-overlay p{
+font-size:22px;
+margin-bottom:30px;
+}
+
+.hero-btn{
+display:inline-flex;
+align-items:center;
+justify-content:center;
+gap:10px;
+background:rgba(255,255,255,.14);
+color:#111;
+padding:14px 30px;
+border-radius:999px;
+text-decoration:none;
+font-weight:700;
+font-size:16px;
+border:1.5px solid rgba(0,0,0,.88);
+backdrop-filter:blur(6px);
+-webkit-backdrop-filter:blur(6px);
+box-shadow:0 8px 24px rgba(0,0,0,.10);
+transition:.25s ease;
+}
+
+.hero-btn::after{
+content:"←";
+font-size:16px;
+line-height:1;
+}
+
+.hero-btn:hover{
+background:rgba(255,255,255,.24);
+transform:translateY(-2px);
+box-shadow:0 12px 28px rgba(0,0,0,.14);
+}
+
+.arrow{
+position:absolute;
+top:50%;
+transform:translateY(-50%);
+width:48px;
+height:48px;
+border-radius:50%;
+border:1.5px solid rgba(255,255,255,.9);
+background:rgba(255,255,255,.08);
+backdrop-filter:blur(6px);
+-webkit-backdrop-filter:blur(6px);
+color:#fff;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:22px;
+cursor:pointer;
+transition:.25s ease;
+z-index:10;
+padding:0;
+}
+
+.arrow:hover{
+background:rgba(255,255,255,.18);
+transform:translateY(-50%) scale(1.05);
+}
+
+.arrow.left{left:24px}
+.arrow.right{right:24px}
+
+
+.section{
+padding:100px 0;
+}
+
+.projects{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:25px;
+margin-top:40px;
+}
+
+.project img{
+width:100%;
+height:320px;
+object-fit:cover;
+border-radius:10px;
+transition:transform .6s ease;
+}
+
+.project:hover img{
+transform:scale(1.08);
+}
+
+footer{
+padding:40px;
+text-align:center;
+color:#777;
+}
+
+@media(max-width:900px){
+
+.projects{
+grid-template-columns:1fr;
+}
+
+.hero-overlay h1{
+font-size:40px;
+}
+
+.hero-overlay{
+width:min(88vw,420px);
+}
+
+.hero-overlay p{
+font-size:18px;
+}
+
+.topbar{
+height:84px;
+}
+
+.hero{
+margin-top:84px;
+}
+
+.nav{
+grid-template-columns:1fr auto;
+grid-template-areas:"toggle logo";
+gap:14px;
+}
+
+.nav > div:first-child{
+grid-area:toggle;
+justify-self:start;
+}
+
+.logo{
+grid-area:logo;
+justify-self:end;
+}
+
+.logo img{
+height:52px;
+max-width:52vw;
+}
+
+.menu-toggle{
+display:inline-flex;
+}
+
+.nav-links{
+display:none;
+}
+
+.mobile-panel{
+display:block;
+position:fixed;
+top:84px;
+left:0;
+right:0;
+background:#fff;
+border-top:1px solid rgba(47,41,37,.08);
+box-shadow:0 14px 30px rgba(0,0,0,.08);
+padding:10px 20px 18px;
+transform:translateY(-120%);
+opacity:0;
+pointer-events:none;
+transition:.3s ease;
+z-index:99;
+}
+
+.mobile-panel.is-open{
+transform:translateY(0);
+opacity:1;
+pointer-events:auto;
+}
+
+.mobile-panel a{
+display:block;
+padding:14px 0;
+text-decoration:none;
+color:#2f2925;
+font-weight:500;
+border-bottom:1px solid rgba(47,41,37,.08);
+}
+
+.mobile-panel a:last-child{
+border-bottom:0;
+}
+
+.section{
+padding:80px 0;
+}
+
+.arrow{
+position:absolute;
+top:50%;
+transform:translateY(-50%);
+width:48px;
+height:48px;
+border-radius:50%;
+border:1.5px solid rgba(255,255,255,.9);
+background:rgba(255,255,255,.08);
+backdrop-filter:blur(6px);
+-webkit-backdrop-filter:blur(6px);
+color:#fff;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:22px;
+cursor:pointer;
+transition:.25s ease;
+z-index:10;
+padding:0;
+}
+
+.arrow:hover{
+background:rgba(255,255,255,.18);
+transform:translateY(-50%) scale(1.05);
+}
+
+.arrow.left{left:24px}
+.arrow.right{right:24px}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="topbar">
+<div class="container nav">
+
+<div>
+<button class="menu-toggle" aria-label="פתח תפריט" aria-expanded="false" aria-controls="mobileMenu">
+<span></span>
+</button>
+</div>
+
+<div class="nav-links">
+<a href="#">דף הבית</a>
+<a href="#projects">פרויקטים</a>
+<a href="#media">מדיה/כתבות</a>
+<a href="#blog">בלוג</a>
+<a href="#contact">צור קשר</a>
+</div>
+
+<div class="logo">
+<img src="maya_logo.png" alt="Studio Maya logo">
+</div>
+
+</div>
+</div>
+
+<div class="mobile-panel" id="mobileMenu">
+<a href="#">דף הבית</a>
+<a href="#projects">פרויקטים</a>
+<a href="#media">מדיה/כתבות</a>
+<a href="#blog">בלוג</a>
+<a href="#contact">צור קשר</a>
+</div>
+
+<section class="hero">
+
+<img class="slide active" src="https://images.unsplash.com/photo-1600607686527-6fb886090705?auto=format&fit=crop&w=2000&q=80">
+<img class="slide" src="https://images.unsplash.com/photo-1600210492493-0946911123ea?auto=format&fit=crop&w=2000&q=80">
+<img class="slide" src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=2000&q=80">
+
+<button class="arrow left">&#10095;</button>
+<button class="arrow right">&#10094;</button>
+
+<div class="hero-overlay">
+
+</div>
+
+</section>
+
+<section id="projects" class="section">
+<div class="container">
+
+<h2>פרויקטים נבחרים</h2>
+
+<div class="projects">
+
+<div class="project">
+<img src="https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1200&q=80">
+</div>
+
+<div class="project">
+<img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80">
+</div>
+
+<div class="project">
+<img src="https://images.unsplash.com/photo-1505693416388-c3d56f45c9d3?auto=format&fit=crop&w=1200&q=80">
+</div>
+
+</div>
+
+</div>
+</section>
+
+<section id="media" class="section">
+<div class="container">
+
+<h2>מדיה / כתבות</h2>
+<p style="margin-top:12px;color:#6f625a;max-width:800px;">
+כאן אפשר להציג כתבות, אזכורים במדיה, ראיונות, פרסומים מקצועיים ושיתופי פעולה עם מגזינים ואתרי עיצוב.
+</p>
+
+<div class="projects" style="margin-top:32px;">
+<div class="project">
+<img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1200&q=80">
+<div style="padding-top:14px;"><strong>כתבה במגזין עיצוב</strong></div>
+</div>
+
+<div class="project">
+<img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=1200&q=80">
+<div style="padding-top:14px;"><strong>ראיון מקצועי</strong></div>
+</div>
+
+<div class="project">
+<img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=80">
+<div style="padding-top:14px;"><strong>פרסום באתר מוביל</strong></div>
+</div>
+</div>
+
+</div>
+</section>
+
+<section id="blog" class="section" style="background:#fbf7f2;">
+<div class="container">
+
+<h2>בלוג</h2>
+<p style="margin-top:12px;color:#6f625a;max-width:800px;">
+אזור למאמרים על עיצוב פנים, השראה, טיפים לשיפוץ, בחירת חומרים, תאורה, תכנון חללים והלבשת הבית.
+</p>
+
+<div class="projects" style="margin-top:32px;">
+<div class="project">
+<img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80">
+<div style="padding-top:14px;"><strong>איך יוצרים סלון נעים ומאוזן</strong></div>
+</div>
+
+<div class="project">
+<img src="https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1200&q=80">
+<div style="padding-top:14px;"><strong>5 טעויות נפוצות בעיצוב מטבח</strong></div>
+</div>
+
+<div class="project">
+<img src="https://images.unsplash.com/photo-1505693416388-c3d56f45c9d3?auto=format&fit=crop&w=1200&q=80">
+<div style="padding-top:14px;"><strong>בחירת חומרים לבית על-זמני</strong></div>
+</div>
+</div>
+
+</div>
+</section>
+
+<section id="contact" class="section">
+<div class="container">
+
+<h2>יצירת קשר</h2>
+
+<p>טלפון: 050-000-0000</p>
+<p>אימייל: hello@studio.co.il</p>
+
+</div>
+</section>
+
+<footer>
+© Studio Maya
+</footer>
+
+<script>
+
+const slides = document.querySelectorAll('.slide');
+let index = 0;
+
+function showSlide(i){
+slides.forEach(s=>s.classList.remove('active'));
+slides[i].classList.add('active');
+}
+
+document.querySelector('.right').onclick=()=>{
+index++;
+if(index>=slides.length) index=0;
+showSlide(index);
+}
+
+document.querySelector('.left').onclick=()=>{
+index--;
+if(index<0) index=slides.length-1;
+showSlide(index);
+}
+
+const menuToggle = document.querySelector('.menu-toggle');
+const mobilePanel = document.querySelector('.mobile-panel');
+
+if(menuToggle && mobilePanel){
+menuToggle.addEventListener('click', ()=>{
+  const isOpen = mobilePanel.classList.toggle('is-open');
+  menuToggle.classList.toggle('is-open', isOpen);
+  menuToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+});
+
+mobilePanel.querySelectorAll('a').forEach(link=>{
+  link.addEventListener('click', ()=>{
+    mobilePanel.classList.remove('is-open');
+    menuToggle.classList.remove('is-open');
+    menuToggle.setAttribute('aria-expanded','false');
+  });
+});
+}
+
+</script>
+
+</body>
+</html>
